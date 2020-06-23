@@ -1,0 +1,12 @@
+{
+  "uploadedBy": "bobson@dugnutt.com",
+  "uploadTimestamp": "1234567890",
+  "fileSize": 123,
+  "vendorName": "Bobson",
+  "invoiceDate": "01/01/1970",
+  "totalAmount": 123,
+  "totalAmountDue": 456,
+  "currency": "CAD",
+  "taxAmount": 12,
+  "processingStatus": "processed"
+}

@@ -1,0 +1,16 @@
+﻿[
+  {
+    "uploadedBy": "bobson@dugnutt.com",
+    "fileCount": 1,
+    "totalFileSize": 123,
+    "totalAmount": 123,
+    "totalAmountDue": 456
+  },
+  {
+    "uploadedBy": "bobson@dugnutt.com",
+    "fileCount": 1,
+    "totalFileSize": 123,
+    "totalAmount": 123,
+    "totalAmountDue": 456
+  }
+]

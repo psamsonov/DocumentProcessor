@@ -1,0 +1,44 @@
+﻿@page "/documents"
+@inject HttpClient Http
+
+<h1>Documents</h1>
+
+<p>Select the document you want to view:</p>
+
+
+@if (documents == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Document</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var document in documents)
+            {
+                <tr>
+                    <td> <a href="/document/@document.Id">@document.Id</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private DocumentId[] documents;
+
+    protected override async Task OnInitializedAsync()
+    {
+        documents = await Http.GetFromJsonAsync<DocumentId[]>("sample-data/listOfDocuments.json");
+    }
+
+    public class DocumentId
+    {
+        public string Id { get; set; }
+    }
+}

@@ -1,0 +1,61 @@
+@page "/stats"
+@inject HttpClient Http
+
+<h1>Document Stats</h1>
+
+<p>Total number of files, their total size, total amount and amount due uploaded by each user.</p>
+
+
+@if (stats == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Uploaded By</th>
+                <th>File Count</th>
+                <th>Total File Size</th>
+                <th>Total Amount</th>
+                <th>Total Amount Due</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var stat in stats)
+            {
+            <tr>
+                <td>@stat.UploadedBy</td>
+                <td>@stat.FileCount</td>
+                <td>@stat.TotalFileSize</td>
+                <td>@stat.TotalAmount</td>
+                <td>@stat.TotalAmountDue</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private DocumentStats[] stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stats = await Http.GetFromJsonAsync<DocumentStats[]>("sample-data/stats.json");
+
+    }
+
+    public class DocumentStats
+    {
+        public string UploadedBy { get; set; }
+
+        public int FileCount { get; set; }
+
+        public int TotalFileSize { get; set; }
+
+        public int TotalAmount { get; set; }
+
+        public int TotalAmountDue { get; set; }
+    }
+}

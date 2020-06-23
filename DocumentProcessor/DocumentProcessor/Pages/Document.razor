@@ -1,0 +1,87 @@
+﻿@page "/document/{id}"
+@inject HttpClient Http
+
+<h3>Document</h3>
+
+
+@if (document == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table>
+        <tr>
+            <td>Uploaded By</td>
+            <td>@document.UploadedBy</td>
+        </tr>
+        <tr>
+            <td>Uploaded Timestamp</td>
+            <td>@document.UploadTimestamp</td>
+        </tr>
+        <tr>
+            <td>Filesize</td>
+            <td>@document.FileSize</td>
+        </tr>
+        <tr>
+            <td>Vendor Name</td>
+            <td>@document.VendorName</td>
+        </tr>
+        <tr>
+            <td>Invoice Date</td>
+            <td>@document.InvoiceDate</td>
+        </tr>
+        <tr>
+            <td>Total Amount</td>
+            <td>@document.TotalAmount</td>
+        </tr>
+        <tr>
+            <td>Total Amount Due</td>
+            <td>@document.TotalAmountDue</td>
+        </tr>
+        <tr>
+            <td>Currency</td>
+            <td>@document.Currency</td>
+        </tr>
+        <tr>
+            <td>Tax Amount</td>
+            <td>@document.TaxAmount</td>
+        </tr>
+        <tr>
+            <td>Processing Status</td>
+            <td>@document.ProcessingStatus</td>
+        </tr>
+    </table>
+}
+<a href="/documents">Back</a>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private DocumentData document;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var test = await Http.GetFromJsonAsync<DocumentData>("sample-data/document.json");
+        if (test != null)
+        {
+            document = test;
+        }
+    }
+
+    public class DocumentData
+    {
+        public string UploadedBy { get; set; }
+        public string UploadTimestamp { get; set; }
+        public int FileSize { get; set; }
+        public string VendorName { get; set; }
+        public string InvoiceDate { get; set; }
+        public int TotalAmount { get; set; }
+        public int TotalAmountDue { get; set; }
+        public string Currency { get; set; }
+        public int TaxAmount { get; set; }
+        public string ProcessingStatus { get; set; }
+    }
+}
+
