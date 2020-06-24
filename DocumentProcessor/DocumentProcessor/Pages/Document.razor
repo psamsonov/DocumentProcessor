@@ -1,5 +1,6 @@
 ﻿@page "/document/{id}"
 @inject HttpClient Http
+@using Common.Models
 
 <h3>Document</h3>
 
@@ -56,6 +57,8 @@ else
 <a href="/documents">Back</a>
 
 @code {
+
+
     [Parameter]
     public string Id { get; set; }
 
@@ -70,18 +73,5 @@ else
         }
     }
 
-    public class DocumentData
-    {
-        public string UploadedBy { get; set; }
-        public string UploadTimestamp { get; set; }
-        public int FileSize { get; set; }
-        public string VendorName { get; set; }
-        public string InvoiceDate { get; set; }
-        public int TotalAmount { get; set; }
-        public int TotalAmountDue { get; set; }
-        public string Currency { get; set; }
-        public int TaxAmount { get; set; }
-        public string ProcessingStatus { get; set; }
-    }
 }
 

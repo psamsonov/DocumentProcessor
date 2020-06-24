@@ -1,5 +1,6 @@
 @page "/stats"
 @inject HttpClient Http
+@using Common.Models
 
 <h1>Document Stats</h1>
 
@@ -44,18 +45,5 @@ else
     {
         stats = await Http.GetFromJsonAsync<DocumentStats[]>("sample-data/stats.json");
 
-    }
-
-    public class DocumentStats
-    {
-        public string UploadedBy { get; set; }
-
-        public int FileCount { get; set; }
-
-        public int TotalFileSize { get; set; }
-
-        public int TotalAmount { get; set; }
-
-        public int TotalAmountDue { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿@page "/documents"
 @inject HttpClient Http
+@using Common.Models
 
 <h1>Documents</h1>
 
@@ -37,8 +38,5 @@ else
         documents = await Http.GetFromJsonAsync<DocumentId[]>("sample-data/listOfDocuments.json");
     }
 
-    public class DocumentId
-    {
-        public string Id { get; set; }
-    }
+
 }
