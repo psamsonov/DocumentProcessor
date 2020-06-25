@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common.Models;
 using DocumentProcessorAPI.Services;
 using DocumentProcessorAPI.Storage;
+using iText.Layout.Element;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +18,18 @@ namespace DocumentProcessorAPI.Controllers
         [HttpPost]
         public ActionResult<string> UploadDocument(DocumentUpload documentUpload)
         {
-            string text = PDFService.GetTextFromPDFBytes(documentUpload.Contents);
-            string id = DocumentService.SaveDocumentDataFromText(documentUpload.Email, text);
+            int length = 0;
+            if (String.IsNullOrEmpty(documentUpload.Text))
+            {
+                documentUpload.Text = PDFService.GetTextFromPDFBytes(documentUpload.Contents);
+                length = documentUpload.Contents.Length;
+            }
+            else
+            {
+                length = documentUpload.Text.Length;
+            }
+
+            string id = DocumentService.SaveDocumentDataFromText(documentUpload.Email, length, documentUpload.Text);
             if (string.IsNullOrWhiteSpace(id))
             {
                 return NotFound();
@@ -27,7 +38,8 @@ namespace DocumentProcessorAPI.Controllers
             {
                 return Ok(id);
             }
-            
+
+
         }
     }
 }
