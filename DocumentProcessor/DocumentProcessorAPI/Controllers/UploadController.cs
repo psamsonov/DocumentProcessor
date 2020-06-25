@@ -15,8 +15,8 @@ namespace DocumentProcessorAPI.Controllers
         [HttpPost]
         public ActionResult<string> UploadDocument(DocumentUpload documentUpload)
         {
-            Console.WriteLine("You uploaded a file, good job! " + documentUpload.Contents.Length);
-            return Ok("123");
+            string text = Services.PDFService.GetTextFromPDFBytes(documentUpload.Contents);
+            return Ok(text);
         }
     }
 }
