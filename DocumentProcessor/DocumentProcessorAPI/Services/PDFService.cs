@@ -1,7 +1,10 @@
-﻿using iText.Kernel.Geom;
+﻿using Common.Models;
+using DocumentProcessorAPI.Storage;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,6 +35,7 @@ namespace DocumentProcessorAPI.Services
             LocationTextExtractionStrategy strategy = new LocationTextExtractionStrategy();
 
             PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
+            // Known limitation: read more than one page. Sample documents are all one page long.
             parser.ProcessPageContent(pdfDoc.GetFirstPage());
 
             pdfDoc.Close();
@@ -39,5 +43,6 @@ namespace DocumentProcessorAPI.Services
             return strategy.GetResultantText();
 
         }
+
     }
 }

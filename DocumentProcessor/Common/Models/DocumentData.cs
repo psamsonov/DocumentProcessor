@@ -14,5 +14,6 @@ namespace Common.Models
         public string Currency { get; set; }
         public int TaxAmount { get; set; }
         public string ProcessingStatus { get; set; }
+        public string Id { get; set; }
     }
 }

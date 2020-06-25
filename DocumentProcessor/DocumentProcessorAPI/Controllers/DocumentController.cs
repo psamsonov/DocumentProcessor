@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Common.Models;
 using Microsoft.AspNetCore.Http;
 using System;
+using DocumentProcessorAPI.Services;
 
 namespace DocumentProcessorAPI.Controllers
 {
@@ -22,18 +23,20 @@ namespace DocumentProcessorAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<DocumentId>> GetDocuments()
         {
-            return Ok(Enumerable.Range(1, 5).Select(index => new DocumentId
-            {
-                Id = index.ToString()
-            })
-            .ToArray());
+            var documents = DocumentService.GetDocuments();
+            return Ok(documents);
         }
 
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<DocumentData> GetDocument()
+        public ActionResult<DocumentData> GetDocument([FromRoute]string id)
         {
-            return Ok(new DocumentData());
+            var document = DocumentService.GetDocument(id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+            return Ok(document);
         }
 
     }
