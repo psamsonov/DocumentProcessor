@@ -1,6 +1,7 @@
 ﻿@page "/document/{id}"
 @inject HttpClient Http
 @using Common.Models
+@using System.Text.Json
 
 <h3>Document</h3>
 
@@ -9,7 +10,7 @@
 {
     <p><em>Loading...</em></p>
 }
-else
+else if (errorCode == "OK")
 {
     <table>
         <tr>
@@ -54,22 +55,36 @@ else
         </tr>
     </table>
 }
+else 
+{
+   <p>There was an error: @errorCode </p>
+}
 <a href="/documents">Back</a>
 
 @code {
-
-
     [Parameter]
     public string Id { get; set; }
 
     private DocumentData document;
 
+    private string errorCode;
+
     protected override async Task OnInitializedAsync()
     {
-        var test = await Http.GetFromJsonAsync<DocumentData>("sample-data/document.json");
-        if (test != null)
+        try
         {
-            document = test;
+            //documents = await Http.GetFromJsonAsync<DocumentId[]>("sample-data/listOfDocuments.json");
+            var response = await Http.GetAsync(Constants.API_URL + "document/" + Id);
+            errorCode = response.StatusCode.ToString();
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonContent = await response.Content.ReadAsStringAsync();
+                document = JsonSerializer.Deserialize<DocumentData>(jsonContent, Constants.CamelCaseSerializeOptions);
+            }
+        }
+        catch (Exception)
+        {
+            document = new DocumentData();
         }
     }
 

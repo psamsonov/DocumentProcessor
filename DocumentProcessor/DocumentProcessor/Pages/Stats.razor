@@ -1,6 +1,7 @@
 @page "/stats"
 @inject HttpClient Http
 @using Common.Models
+@using System.Text.Json
 
 <h1>Document Stats</h1>
 
@@ -43,7 +44,24 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        stats = await Http.GetFromJsonAsync<DocumentStats[]>("sample-data/stats.json");
+        try
+        {
+            //documents = await Http.GetFromJsonAsync<DocumentId[]>("sample-data/listOfDocuments.json");
+            var response = await Http.GetAsync(Constants.API_URL + "stats");
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonContent = await response.Content.ReadAsStringAsync();
+                stats = JsonSerializer.Deserialize<DocumentStats[]>(jsonContent, Constants.CamelCaseSerializeOptions);
+            }
+            else
+            {
+                stats = new DocumentStats[0];
+            }
+        }
+        catch (Exception)
+        {
+            stats = new DocumentStats[0];
+        }
 
     }
 }

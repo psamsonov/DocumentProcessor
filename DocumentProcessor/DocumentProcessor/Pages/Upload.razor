@@ -1,9 +1,31 @@
 ﻿@page "/upload"
+@inject HttpClient Http
+@using System.IO
 
 
 <h3>Upload</h3>
 
+<InputFile OnChange="HandleFileSelected" />
+
+@if (file != null)
+{
+    <button @onclick="UploadFile">Upload</button>
+}
+
 
 @code {
+    IFileListEntry file;
 
+
+    void HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+    }
+
+    async Task UploadFile()
+    {
+        byte[] result = new byte[file.Size];
+        await file.Data.ReadAsync(result, 0, (int)file.Size);
+
+    }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Common.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace DocumentProcessorAPI.Controllers
 {
@@ -34,17 +35,11 @@ namespace DocumentProcessorAPI.Controllers
             return Ok(new DocumentData());
         }
 
-        [HttpGet]
-        [Route("stats")]
-        public ActionResult<DocumentStats> GetDocumentStats()
-        {
-            return Ok(new DocumentStats());
-        }
-
         [HttpPost]
         [Route("upload")]
-        public ActionResult UploadDocument()
+        public ActionResult UploadDocument(byte[] data)
         {
+
             return Ok();
         }
     }

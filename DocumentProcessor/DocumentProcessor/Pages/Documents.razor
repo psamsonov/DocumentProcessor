@@ -1,6 +1,7 @@
 ﻿@page "/documents"
 @inject HttpClient Http
 @using Common.Models
+@using System.Text.Json;
 
 <h1>Documents</h1>
 
@@ -35,7 +36,25 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        documents = await Http.GetFromJsonAsync<DocumentId[]>("sample-data/listOfDocuments.json");
+        try
+        {
+            //documents = await Http.GetFromJsonAsync<DocumentId[]>("sample-data/listOfDocuments.json");
+            var response = await Http.GetAsync(Constants.API_URL + "document");
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonContent = await response.Content.ReadAsStringAsync();
+                documents = JsonSerializer.Deserialize<DocumentId[]>(jsonContent, Constants.CamelCaseSerializeOptions);
+            }
+            else
+            {
+                documents = new DocumentId[0];
+            }
+        }
+        catch (Exception)
+        {
+            documents = new DocumentId[0];
+        }
+
     }
 
 
