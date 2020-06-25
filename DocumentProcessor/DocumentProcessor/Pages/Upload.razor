@@ -7,6 +7,7 @@
 <h3>Upload</h3>
 
 <InputFile OnChange="HandleFileSelected" />
+Upload as: <input @bind="Email" />
 <p>Status: @status</p>
 
 
@@ -19,6 +20,7 @@
 @code {
     IFileListEntry file;
     string status = "Waiting";
+    string Email { get; set; }
 
 
     void HandleFileSelected(IFileListEntry[] files)
@@ -38,7 +40,7 @@
                 await file.Data.CopyToAsync(ms);
                 bytes = ms.ToArray();
             }
-            var upload = new DocumentUpload { Email = "peter", Contents = bytes };
+            var upload = new DocumentUpload { Email = Email, Contents = bytes };
             status = "Uploading";
 
             var response = await Http.PostAsJsonAsync(Constants.API_URL + "upload", upload);
@@ -47,7 +49,7 @@
             {
                 var body = await response.Content.ReadAsStringAsync();
 
-                status = "Uploaded";
+                status = "Upload complete. Your document ID is: " + body;
             }
             else
             {
