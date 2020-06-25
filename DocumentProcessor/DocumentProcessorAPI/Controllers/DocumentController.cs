@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Common.Models;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace DocumentProcessorAPI.Controllers
 {
@@ -35,12 +36,5 @@ namespace DocumentProcessorAPI.Controllers
             return Ok(new DocumentData());
         }
 
-        [HttpPost]
-        [Route("upload")]
-        public ActionResult UploadDocument(byte[] data)
-        {
-
-            return Ok();
-        }
     }
 }

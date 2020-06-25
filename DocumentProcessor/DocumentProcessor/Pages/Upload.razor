@@ -1,11 +1,14 @@
 ﻿@page "/upload"
 @inject HttpClient Http
 @using System.IO
+@using Common.Models
 
 
 <h3>Upload</h3>
 
 <InputFile OnChange="HandleFileSelected" />
+<p>Status: @status</p>
+
 
 @if (file != null)
 {
@@ -15,6 +18,7 @@
 
 @code {
     IFileListEntry file;
+    string status = "Waiting";
 
 
     void HandleFileSelected(IFileListEntry[] files)
@@ -24,8 +28,37 @@
 
     async Task UploadFile()
     {
-        byte[] result = new byte[file.Size];
-        await file.Data.ReadAsync(result, 0, (int)file.Size);
+        try
+        {
+            status = "Reading";
+            byte[] bytes;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                await file.Data.CopyToAsync(ms);
+                bytes = ms.ToArray();
+            }
+            var upload = new DocumentUpload { Email = "peter", Contents = bytes };
+            status = "Uploading";
+
+            var response = await Http.PostAsJsonAsync(Constants.API_URL + "upload", upload);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+
+                status = "Uploaded";
+            }
+            else
+            {
+                status = "Error: " + response.StatusCode;
+            }
+        }
+        catch (Exception e)
+        {
+            status = "Upload failed: " + e.Message;
+        }
+
 
     }
 }
