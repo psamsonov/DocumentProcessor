@@ -1,11 +1,9 @@
 using NUnit.Framework;
-using System.ComponentModel.DataAnnotations;
 using DocumentProcessorAPI.Services;
-using NuGet.Frameworks;
 
 namespace DocumentProcessorAPI.Tests
 {
-    public class Tests
+    public class DocumentParsingTest
     {
         [SetUp]
         public void Setup()
@@ -268,6 +266,8 @@ This message was sent to alan+ab@hubdoc.com because you have a Hubdoc account. V
         
 
         //Invoices #4 and #5 appear to be identical, so there will not be another test
+
+       
     }
 }
 
