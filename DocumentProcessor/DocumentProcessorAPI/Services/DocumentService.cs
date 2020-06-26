@@ -39,7 +39,7 @@ namespace DocumentProcessorAPI.Services
                 var words = lines[start].Trim().Split(" ");
                 if (DateTime.TryParse(String.Join(' ', words[2], words[3], words[4]), out DateTime result))
                 {
-                    data.InvoiceDate = result.ToFileTimeUtc().ToString();
+                    data.InvoiceDate = result.ToShortDateString();
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace DocumentProcessorAPI.Services
             {
                 if (DateTime.TryParse(lines[start - 1], out DateTime result))
                 {
-                    data.InvoiceDate = result.ToFileTimeUtc().ToString();
+                    data.InvoiceDate = result.ToShortDateString();
                 }
                 else
                 {
@@ -90,10 +90,11 @@ namespace DocumentProcessorAPI.Services
                     data.TotalAmount = Decimal.Parse(lines[i].Trim().Split(" ")[1].Substring(1));
                 }
                 // Taxes are on the same line but can be different strings, so there needs to be some trickery
-                else if (lines[i].Contains("%"))
+                // And also discounts contain a % sign too, so watch out
+                else if (lines[i].Contains('%') && !lines[i].Contains("off"))
                 {
                     var words = lines[i].Trim().Split(" ");
-                    data.TotalAmount = Decimal.Parse(words[^1].Substring(1));
+                    data.TaxAmount = Decimal.Parse(words[^1].Substring(1));
                 }
             }
 
