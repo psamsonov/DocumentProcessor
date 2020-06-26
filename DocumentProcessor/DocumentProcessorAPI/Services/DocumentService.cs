@@ -25,8 +25,6 @@ namespace DocumentProcessorAPI.Services
         {
             DocumentData data = new DocumentData();
 
-            Console.WriteLine(text);
-
             var lines = text.Split("\n");
             int start = 0;
 
@@ -36,7 +34,6 @@ namespace DocumentProcessorAPI.Services
             {
                 if (lines[start].Contains("Invoice"))
                 {
-                    Console.WriteLine("starting at line " + start);
                     break;
                 }
             }
