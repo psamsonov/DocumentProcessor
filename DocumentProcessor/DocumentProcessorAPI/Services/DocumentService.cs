@@ -14,6 +14,15 @@ namespace DocumentProcessorAPI.Services
 
         public static string SaveDocumentDataFromText(string email, int filesize, string text)
         {
+            var data = ExtractDocumentDataFromText(email, filesize, text);
+                
+            var id = DocumentStorage.AddDocument(data);
+
+            return id;
+        }
+
+        public static DocumentData ExtractDocumentDataFromText(string email, int filesize, string text)
+        {
             DocumentData data = new DocumentData();
 
             Console.WriteLine(text);
@@ -36,27 +45,18 @@ namespace DocumentProcessorAPI.Services
             // all others have it on a different line
             if ( start > 0 && String.IsNullOrWhiteSpace(lines[start-1]))
             {
+                data.InvoiceDate = ExtractDateFromSameLine(lines[start], start);
 
-                var words = lines[start].Trim().Split(" ");
-                if (DateTime.TryParse(String.Join(' ', words[2], words[3], words[4]), out DateTime result))
-                {
-                    data.InvoiceDate = result.ToShortDateString();
-                }
-                else
-                {
-                    Console.WriteLine(lines[start] + " does not contain a DateTime");
-                }
-               
             }
             else
             {
-                if (DateTime.TryParse(lines[start - 1], out DateTime result))
+                if (start > 0 && DateTime.TryParse(lines[start - 1], out DateTime result))
                 {
                     data.InvoiceDate = result.ToShortDateString();
                 }
                 else
                 {
-                    Console.WriteLine(lines[start - 1] + " is not a DateTime");
+                    data.InvoiceDate = ExtractDateFromSameLine(lines[start], start);
                 }
             }
 
@@ -65,29 +65,29 @@ namespace DocumentProcessorAPI.Services
             {
                 vendorIndex++;
             }
-            data.VendorName = lines[vendorIndex];
+            data.VendorName = lines[vendorIndex].Trim();
 
             for (int i = start; i< lines.Length; i++)
             {
                 // The currency and total due straddle the " Total Due" line
                 // or sometimes are after it
-                if (lines[i] == " Total Due")
+                if (lines[i].StartsWith(" Total Due"))
                 {
                     if (lines[i + 1].Contains(" "))
                     {
                         var words = lines[i + 1].Trim().Split(" ");
                         data.TotalAmountDue = Decimal.Parse(words[0].Substring(1));
-                        data.Currency = words[1];
+                        data.Currency = words[1].Trim();
                     }
                     else
                     {
                         data.TotalAmountDue = Decimal.Parse(lines[i - 1].Substring(1));
-                        data.Currency = lines[i + 1];
+                        data.Currency = lines[i + 1].Trim();
                     }
                    
                 }
-                // The total is on the same line
-                else if (lines[i].StartsWith(" Total")) {
+                // The total is on the same line, but avoid Total Due
+                else if (lines[i].StartsWith(" Total") && !lines[i].Contains("Due")) {
                     data.TotalAmount = Decimal.Parse(lines[i].Trim().Split(" ")[1].Substring(1));
                 }
                 // Taxes are on the same line but can be different strings, so there needs to be some trickery
@@ -103,9 +103,20 @@ namespace DocumentProcessorAPI.Services
             data.UploadedBy = email;
             data.FileSize = filesize;
 
-            var id = DocumentStorage.AddDocument(data);
+            return data;
+        }
 
-            return id;
+        private static string ExtractDateFromSameLine(string line, int start)
+        {
+            var words = line.Trim().Split(" ");
+            if (DateTime.TryParse(String.Join(' ', words[2], words[3], words[4]), out DateTime result))
+            {
+               return result.ToShortDateString();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static DocumentData GetDocument(string id)
