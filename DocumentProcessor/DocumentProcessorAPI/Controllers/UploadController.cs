@@ -16,7 +16,7 @@ namespace DocumentProcessorAPI.Controllers
     public class UploadController : ControllerBase
     {
         [HttpPost]
-        public ActionResult<string> UploadDocument(DocumentUpload documentUpload)
+        public ActionResult<DocumentId> UploadDocument(DocumentUpload documentUpload)
         {
             int length = 0;
             if (String.IsNullOrEmpty(documentUpload.Text))
@@ -36,7 +36,7 @@ namespace DocumentProcessorAPI.Controllers
             }
             else
             {
-                return Ok(id);
+                return Ok(new DocumentId { Id = id });
             }
 
 

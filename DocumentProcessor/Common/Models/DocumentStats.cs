@@ -12,8 +12,8 @@ namespace Common.Models
 
         public int TotalFileSize { get; set; }
 
-        public int TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
 
-        public int TotalAmountDue { get; set; }
+        public decimal TotalAmountDue { get; set; }
     }
 }

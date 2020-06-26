@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @using System.IO
 @using Common.Models
+@using System.Text.Json
 
 
 <h3>Upload</h3>
@@ -47,9 +48,11 @@ Upload as: <input @bind="Email" />
 
             if (response.IsSuccessStatusCode)
             {
-                var body = await response.Content.ReadAsStringAsync();
+                var jsonContent = await response.Content.ReadAsStringAsync();
+                var id = JsonSerializer.Deserialize<DocumentId>(jsonContent, Constants.CamelCaseSerializeOptions);
 
-                status = "Upload complete. Your document ID is: " + body;
+
+                status = "Upload complete. Your document ID is: " + id.Id;
             }
             else
             {

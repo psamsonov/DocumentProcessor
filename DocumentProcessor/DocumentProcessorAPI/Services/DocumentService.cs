@@ -3,6 +3,7 @@ using DocumentProcessorAPI.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -115,6 +116,11 @@ namespace DocumentProcessorAPI.Services
         public static IEnumerable<DocumentData> GetDocuments()
         {
             return DocumentStorage.GetDocuments();
+        }
+
+        public static IEnumerable<DocumentStats> GetStats()
+        {
+            return DocumentStorage.GetStats();
         }
     }
 }
