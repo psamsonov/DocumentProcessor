@@ -12,6 +12,7 @@ Build solution:
 Run the following commands to start the document processor (preferably in different consoles):
 
 `dotnet run -p DocumentProcessorApi `
+
 `dotnet run -p DocumentProcessor --urls=http://localhost:5002/`
 
 Navigate your browser to http://localhost:5002/
